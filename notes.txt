@@ -1,0 +1,143 @@
+🔍 What Are Route Groups?
+In the app/ directory of a Next.js project, folders are normally mapped directly to URL paths.
+But if you wrap a folder in parentheses, like (admin), it becomes a route group — which means it won’t show up in the URL.
+
+
+✅ Why Use Route Groups?
+Organize routes by intent or team (like (admin), (auth), (marketing)).
+
+Use different layouts for different groups.
+
+Keep the URL clean (no (folderName) in the path).
+
+Apply loading states, error boundaries, or root layouts only to specific groups.
+
+🧪 Example
+File Structure:
+bash
+Copy
+Edit
+app/
+├── (marketing)/
+│   ├── layout.js       → Marketing layout
+│   └── about/
+│       └── page.js     → /about
+├── (shop)/
+│   ├── layout.js       → Shop layout
+│   └── about/
+│       └── page.js     → /about
+Both (marketing)/about/page.js and (shop)/about/page.js try to resolve to /about.
+💥 This causes a conflict, because route groups don’t add anything to the URL.
+
+💡 Correct Usage (Avoid Conflict)
+Let’s separate the URLs instead:
+
+bash
+Copy
+Edit
+app/
+├── (marketing)/
+│   ├── layout.js
+│   └── about-marketing/
+│       └── page.js     → /about-marketing
+├── (shop)/
+│   ├── layout.js
+│   └── about-shop/
+│       └── page.js     → /about-shop
+Now there’s no conflict because the routes are unique (/about-marketing vs /about-shop).
+
+🌐 Multiple Root Layouts
+When each route group has its own layout.js, they’re treated as separate root layouts.
+
+Example:
+bash
+Copy
+Edit
+app/
+├── (shop)/layout.js      → used by /cart, /products, etc.
+│   └── cart/page.js      → /cart
+├── (marketing)/layout.js → used by /blog, /about, etc.
+│   └── blog/page.js      → /blog
+If you go from /cart to /blog, since they use different root layouts, it causes a full page load (not client-side navigation).
+
+This means React’s fast navigation is lost between them.
+⚠️ This is important for performance and user experience.
+
+✅ Best Practices
+Use route groups to organize code, not URLs.
+
+Avoid route path conflicts (e.g. two page.js files both rendering to /about).
+
+Use route groups if you want different layouts, loading.tsx, error.tsx, etc., without polluting the URL.
+
+Be cautious with multiple root layouts — client-side navigation will be lost between them.
+
+🧩 Real-world Tip
+bash
+Copy
+Edit
+app/
+├── (auth)/
+│   └── login/page.tsx        → /login
+├── (dashboard)/
+│   ├── layout.tsx
+│   └── profile/page.tsx      → /profile
+
+
+✅ What is "use client" in Next.js?
+In Next.js 13+ (with the App Router), "use client" is a directive that tells Next.js:
+
+“This file should be rendered on the client-side instead of the server.”
+
+🚀 Why do we need "use client"?
+By default, components in the App Router (app/ folder) are server components (i.e., rendered on the server). But some components must run in the browser, such as:
+
+Components using useState, useEffect, or any React hook
+
+Event listeners (like onClick, onSubmit, etc.)
+
+Accessing browser APIs (like window, localStorage)
+
+UI interactivity (modals, dropdowns, form handling, etc.)
+
+When you write:
+
+tsx
+Copy
+Edit
+import Image from "next/image";
+You're importing the Image component from Next.js’s built-in module called next. Here's a breakdown of where next exists and how it's resolved:
+
+🔍 Where does "next" come from?
+"next" is a Node module installed automatically when you install Next.js using:
+
+bash
+Copy
+Edit
+npm install next react react-dom
+After installation, a folder named next exists inside your node_modules directory:
+
+kotlin
+Copy
+Edit
+your-project/
+├── node_modules/
+│   └── next/  ← this is where it lives
+├── pages/ or app/
+├── package.json
+So, "next/image" is resolved by Node.js from:
+
+vbnet
+Copy
+Edit
+node_modules/next/image.js (or .ts depending on implementation)
+🧠 Why use next/image?
+The Image component from "next/image" is an optimized image component. It provides:
+
+Automatic image resizing
+
+Lazy loading
+
+WebP support
+
+Better performance than native <img> in production
