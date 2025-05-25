@@ -6,14 +6,6 @@ import { cookies } from "next/headers";
 // Session duration (1 week)
 const SESSION_DURATION = 60 * 60 * 24 * 7;
 
-
-
-
-
-
-
-
-
 // Set session cookie
 export async function setSessionCookie(idToken: string) {
   const cookieStore = await cookies();
@@ -33,7 +25,8 @@ export async function setSessionCookie(idToken: string) {
   });
 }
 
-export async function signUp(params: SignUpParams) { // SignUpParams -> interface in index.ts
+export async function signUp(params: SignUpParams) {
+  // SignUpParams -> interface in index.ts
   const { uid, name, email } = params;
 
   try {
@@ -75,7 +68,6 @@ export async function signUp(params: SignUpParams) { // SignUpParams -> interfac
   }
 }
 
-
 export async function signIn(params: SignInParams) {
   const { email, idToken } = params;
 
@@ -97,7 +89,6 @@ export async function signIn(params: SignInParams) {
     };
   }
 }
-
 
 // Get current user from session cookie
 export async function getCurrentUser(): Promise<User | null> {
@@ -128,10 +119,45 @@ export async function getCurrentUser(): Promise<User | null> {
   }
 }
 
-
 // Check if user is authenticated
 export async function isAuthenticated() {
   const user = await getCurrentUser();
   return !!user;
 }
 
+export async function getInterviewsByUserId(
+  userId: string
+): Promise<Interview[] | null> {
+  const interviews = await db
+  
+    .collection("interviews")
+    .where('userId','==',userId)
+    .orderBy('createdAt','desc')
+    .get();
+
+    return interviews.docs.map((doc)=>({
+
+      id:doc.id,
+      ...doc.data()
+    })) as Interview[];
+}
+
+
+export async function getLatestInterviews(
+  params: GetLatestInterviewsParams
+): Promise<Interview[] | null> {
+  const { userId, limit = 20 } = params;
+
+  const interviews = await db
+    .collection('interviews')
+    .where('finalized', '==', true)
+    .where('userId', '!=', userId)
+    .orderBy('createdAt', 'desc')
+    .limit(limit)
+    .get();
+
+  return interviews.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Interview[];
+}

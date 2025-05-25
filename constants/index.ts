@@ -1,5 +1,5 @@
-// import { CreateAssistantDTO } from "@vapi-ai/web/dist/api";
-// import { z } from "zod";
+import { CreateAssistantDTO } from "@vapi-ai/web/dist/api";
+import { z } from "zod";
 
 export const mappings = {
   "react.js": "react",
@@ -146,7 +146,6 @@ export const mappings = {
 // Inform them that the company will reach out soon with feedback.
 // End the conversation on a polite and positive note.
 
-
 // - Be sure to be professional and polite.
 // - Keep all your responses short and simple. Use official language, but be kind and welcoming.
 // - This is a voice conversation, so keep your responses short, like in a real conversation. Don't ramble for too long.`,
@@ -229,260 +228,197 @@ export const dummyInterviews: Interview[] = [
   },
 ];
 
-
 export const generator = {
-  "name": "devansh_interview_platform",
-  "nodes": [
+  name: "Generate Interview",
+  nodes: [
     {
-      "name": "start",
-      "type": "conversation",
-      "isStart": true,
-      "metadata": {
-        "position": {
-          "x": -109.4621439993664,
-          "y": 161.90376260829487
-        }
-      },
-      "prompt": "Hello {{username}}! Let's prepare your interview. I'll ask you a few questions and generate a perfect interview just for you . Have a conversation with the user about their favourite AI agents. Are you ready?\n",
-      "voice": {
-        "model": "aura-2",
-        "voiceId": "thalia",
-        "provider": "deepgram"
-      },
-      "variableExtractionPlan": {
-        "output": [
-          {
-            "enum": [
-              "entry",
-              "mid",
-              "senior"
-            ],
-            "type": "string",
-            "title": "level",
-            "description": "The job experience level."
-          },
-          {
-            "enum": [],
-            "type": "number",
-            "title": "amount",
-            "description": "How many questions would you like to generate?"
-          },
-          {
-            "enum": [],
-            "type": "string",
-            "title": "techstack",
-            "description": "A list of technologies to cover during the job interview. For example, React, Next.js, Express.js, Node and so on…"
-          },
-          {
-            "enum": [],
-            "type": "string",
-            "title": "role",
-            "description": "What role should would you like to train for? For example Frontend, Backend, Fullstack, Design, UX?"
-          },
-          {
-            "enum": [
-              "Technical",
-              "HR",
-              "Behavioral",
-              "Managerial",
-              "System Design",
-              "Product Management",
-              "Sales",
-              "Marketing",
-              "Finance",
-              "Data Science",
-              "Internship"
-            ],
-            "type": "string",
-            "title": "type",
-            "description": "What type of the interview should it be?"
-          }
-        ]
-      },
-      "messagePlan": {
-        "firstMessage": "Hey there!"
-      }
-    },
-    {
-      "name": "apiRequest_1748029931044",
-      "type": "apiRequest",
-      "metadata": {
-        "position": {
-          "x": -108.58179454943163,
-          "y": 759.4862924185123
-        }
-      },
-      "method": "POST",
-      "url": "https://echo-hire-gamma.vercel.app/api/vapi/generate",
-      "headers": {
-        "type": "object",
-        "properties": {}
-      },
-      "body": {
-        "type": "object",
-        "properties": {
-          "role": {
-            "type": "string",
-            "value": "{{ role }}",
-            "description": ""
-          },
-          "type": {
-            "type": "string",
-            "value": "{{ type }}",
-            "description": ""
-          },
-          "level": {
-            "type": "string",
-            "value": "{{ level }}",
-            "description": ""
-          },
-          "amount": {
-            "type": "string",
-            "value": "{{ amount }}",
-            "description": ""
-          },
-          "userid": {
-            "type": "string",
-            "value": "{{ userid }}",
-            "description": ""
-          },
-          "techstack": {
-            "type": "string",
-            "value": "{{ techstack }}",
-            "description": ""
-          }
-        }
-      },
-      "output": {
-        "type": "object",
-        "properties": {}
-      },
-      "mode": "blocking",
-      "hooks": []
-    },
-    {
-      "name": "conversation_1748030322941",
-      "type": "conversation",
-      "metadata": {
-        "position": {
-          "x": -111.87512314515683,
-          "y": 1020.3486305531185
-        }
-      },
-      "prompt": "Thank the user for the conversation and inform them that the interview has been generated successfully",
-      "voice": {
-        "model": "eleven_turbo_v2_5",
-        "speed": 1,
-        "style": 0,
-        "voiceId": "EXAVITQu4vr4xnSDxMaL",
-        "autoMode": false,
-        "provider": "11labs",
-        "chunkPlan": {
-          "enabled": true,
-          "formatPlan": {
-            "enabled": true,
-            "replacements": [],
-            "numberToDigitsCutoff": 2025
-          },
-          "minCharacters": 30,
-          "punctuationBoundaries": [
-            ".",
-            "!",
-            "?",
-            ";"
-          ]
+      name: "start",
+      type: "conversation",
+      isStart: true,
+      metadata: {
+        position: {
+          x: 0,
+          y: 0,
         },
-        "stability": 0.5,
-        "cachingEnabled": true,
-        "similarityBoost": 0.75,
-        "useSpeakerBoost": false,
-        "enableSsmlParsing": false,
-        "optimizeStreamingLatency": 3
-      }
-    },
-    {
-      "name": "hangup_1748030433472",
-      "type": "hangup",
-      "metadata": {
-        "position": {
-          "x": -17.462143999366404,
-          "y": 1238.8719474631894
-        }
-      }
-    },
-    {
-      "name": "conversation_1748032104333",
-      "type": "conversation",
-      "metadata": {
-        "position": {
-          "x": -111.91164469249543,
-          "y": 522.6030597488626
-        }
       },
-      "prompt": "Say that the Interview will be generated shortly.",
-      "voice": {
-        "model": "eleven_turbo_v2_5",
-        "speed": 1,
-        "style": 0,
-        "voiceId": "EXAVITQu4vr4xnSDxMaL",
-        "autoMode": false,
-        "provider": "11labs",
-        "chunkPlan": {
-          "enabled": true,
-          "formatPlan": {
-            "enabled": true,
-            "replacements": [],
-            "numberToDigitsCutoff": 2025
+      prompt:
+        "Speak first.  Greet the user by  and help them create a new AI Interviewer",
+      voice: {
+        model: "aura-2",
+        voiceId: "thalia",
+        provider: "deepgram",
+      },
+      variableExtractionPlan: {
+        output: [
+          {
+            title: "level",
+            description: "The job experience level .",
+            type: "string",
+            enum: ["entry", "mid", "senior"],
           },
-          "minCharacters": 30,
-          "punctuationBoundaries": [
-            ".",
-            "!",
-            "?",
-            ";"
-          ]
+          {
+            title: "amount",
+            description: "How many questions would you like to generate?",
+            type: "number",
+            enum: [],
+          },
+          {
+            title: "techstack",
+            description:
+              "A list of technologies to cover during the job interview. For example, React, Next.js, Express.js, Node and so on...",
+            type: "string",
+            enum: [],
+          },
+          {
+            title: "role",
+            description:
+              "What role should would you like to train for? For example Frontend, Backend, Fullstack, Design, UX?",
+            type: "string",
+            enum: [],
+          },
+          {
+            title: "type",
+            description: "What type of the interview should it be? ",
+            type: "string",
+            enum: ["behavioural", "technical", "mixed"],
+          },
+          
+        ],
+      },
+    },
+    {
+      name: "apiRequest_1747470739045",
+      type: "apiRequest",
+      metadata: {
+        position: {
+          x: -16.075937072883846,
+          y: 703.623428447121,
         },
-        "stability": 0.5,
-        "cachingEnabled": true,
-        "similarityBoost": 0.75,
-        "useSpeakerBoost": false,
-        "enableSsmlParsing": false,
-        "optimizeStreamingLatency": 3
-      }
-    }
+      },
+      method: "POST",
+      url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/vapi/generate`,
+      headers: {
+        type: "object",
+        properties: {},
+      },
+      body: {
+        type: "object",
+        properties: {
+          role: {
+            type: "string",
+            description: "",
+            value: "{{ role }}",
+          },
+          level: {
+            type: "string",
+            description: "",
+            value: "{{ level }}",
+          },
+          type: {
+            type: "string",
+            description: "",
+            value: "{{ type }}",
+          },
+          amount: {
+            type: "number",
+            description: "",
+            value: "{{ amount }}",
+          },
+          userid: {
+            type: "string",
+            description: "",
+            value: "{{ userid }}",
+          },
+          techstack: {
+            type: "string",
+            description: "",
+            value: "{{ techstack }}",
+          },
+        },
+      },
+      output: {
+        type: "object",
+        properties: {},
+      },
+      mode: "blocking",
+      hooks: [],
+    },
+    {
+      name: "conversation_1747721261435",
+      type: "conversation",
+      metadata: {
+        position: {
+          x: -17.547788169718615,
+          y: 1003.3409337989506,
+        },
+      },
+      prompt:
+        "Thank the user for the conversation and inform them that the interview was generated successfully.",
+      voice: {
+        provider: "deepgram",
+        voiceId: "thalia",
+        model: "aura-2",
+      },
+    },
+    {
+      name: "conversation_1747744490967",
+      type: "conversation",
+      metadata: {
+        position: {
+          x: -11.165436030430953,
+          y: 484.94857971060617,
+        },
+      },
+      prompt: "Say that the Interview will be generated shortly.",
+      voice: {
+        provider: "deepgram",
+        voiceId: "thalia",
+        model: "aura-2",
+      },
+    },
+    {
+      name: "hangup_1747744730181",
+      type: "hangup",
+      metadata: {
+        position: {
+          x: 76.01267674000721,
+          y: 1272.0665127156606,
+        },
+      },
+    },
   ],
-  "edges": [
+  edges: [
     {
-      "from": "apiRequest_1748029931044",
-      "to": "conversation_1748030322941",
-      "condition": {
-        "type": "ai",
-        "prompt": ""
-      }
+      from: "apiRequest_1747470739045",
+      to: "conversation_1747721261435",
+      condition: {
+        type: "ai",
+        prompt: "",
+      },
     },
     {
-      "from": "conversation_1748030322941",
-      "to": "hangup_1748030433472",
-      "condition": {
-        "type": "ai",
-        "prompt": ""
-      }
+      from: "start",
+      to: "conversation_1747744490967",
+      condition: {
+        type: "ai",
+        prompt: "If user provided all the required variables",
+      },
     },
     {
-      "from": "start",
-      "to": "conversation_1748032104333",
-      "condition": {
-        "type": "ai",
-        "prompt": "if user provided all the required variables."
-      }
+      from: "conversation_1747744490967",
+      to: "apiRequest_1747470739045",
+      condition: {
+        type: "ai",
+        prompt: "",
+      },
     },
     {
-      "from": "conversation_1748032104333",
-      "to": "apiRequest_1748029931044",
-      "condition": {
-        "type": "ai",
-        "prompt": ""
-      }
-    }
-  ]
-}
+      from: "conversation_1747721261435",
+      to: "hangup_1747744730181",
+      condition: {
+        type: "ai",
+        prompt: "",
+      },
+    },
+  ],
+};

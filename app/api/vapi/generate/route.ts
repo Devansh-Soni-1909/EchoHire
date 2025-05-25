@@ -5,7 +5,10 @@ import { db } from "@/Firebase/admin";
 import { getRandomInterviewCover } from "@/lib/utils";
 
 export async function POST(request: Request) {
+  
+
   const { type, role, level, techstack, amount, userid } = await request.json();
+   console.log("Received userId on server:", userid);
 
   try {
     const { text: questions } = await generateText({
