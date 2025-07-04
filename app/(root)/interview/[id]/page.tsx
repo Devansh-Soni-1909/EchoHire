@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getInterviewById } from "@/lib/actions/general.action";
+import {getFeedbackByInterviewId} from "@/lib/actions/general.action";
 import React from "react";
 import Image from "next/image";
 import DisplayTechIcons from "@/components/DisplayTechIcons";
@@ -22,6 +23,10 @@ const Page = async ({ params }: RouteParams) => {
   if (!interview) {
     redirect("/");
   }
+  const feedback = await getFeedbackByInterviewId({
+    interviewId: id,
+    userId: user?.id!,
+  });
 
   return (
     <>
@@ -47,10 +52,11 @@ const Page = async ({ params }: RouteParams) => {
 
       <Agent
         userName={user?.name!}
-        userId={user?.id!} // ✅ fixed: correctly pass userId
+        userId={user?.id} // ✅ fixed: correctly pass userId
         type="interview"
         interviewId={id}
         questions={interview.questions}
+        feedbackId={feedback?.id}
       />
     </>
   );
